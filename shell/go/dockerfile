@@ -1,0 +1,14 @@
+# ベースイメージとしてGolangの公式イメージを使用
+FROM golang:1.20
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# ソースコードをコンテナにコピー
+COPY main.go .
+
+# Goプログラムをビルド
+RUN go build -o myshell main.go
+
+# 実行コマンドを設定
+CMD ["./myshell"]
