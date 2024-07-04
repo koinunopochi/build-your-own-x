@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  lsh:
+    build: .
+    volumes:
+      - ./:/app
+      - /app/.history
+    tty: true
+    stdin_open: true

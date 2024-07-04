@@ -1,0 +1,18 @@
+# Alpine Linuxをベースイメージとして使用
+FROM alpine:3.14
+
+# 必要なパッケージをインストール
+RUN apk add --no-cache \
+    build-base \
+    gdb \
+    vim \
+    make
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# ホストのソースコードをコンテナにコピー
+COPY . .
+
+# コンテナ起動時にシェルを実行
+CMD ["/bin/sh"]
