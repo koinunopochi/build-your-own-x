@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>&#x306f;&#x3058;&#x3081;&#x306b;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <p>元ネタ：<a href="https://medium.com/@sweetpalma/gooact-react-in-160-lines-of-javascript-44e0742ad60f">https://medium.com/@sweetpalma/gooact-react-in-160-lines-of-javascript-44e0742ad60f</a></p>
+<h2 id="はじめに">はじめに</h2>
+<p><em><strong>重要なお知らせ</strong></em>： このチュートリアルを行うには、少なくともReactの基本的な知識が必要です。</p>
+<p><strong>React</strong>は素晴らしいライブラリです。多くの開発者がその単純性、パフォーマンス、宣言的な方法論に惚れ込んでいます。しかし、私に特別な理由があります。それがReactのアーキテクチャを理解することです。React の核となる理念は単純ながらも不思議と魅力的に思えます。Reactの基本原理を理解することで、より高速で安全なコーディングができるようになるでしょう。</p>
+<p>このチュートリアルでは、React のコンポーネントAPI や独自のバーチャルDOM（VDOM）実装を含む、完全に機能するReactクローンを作成する方法を説明します。このチュートリアルは4つのセクションに分かれており、それぞれ1つの主要なトピックを扱います:</p>
+<ul>
+<li><strong>要素</strong>: このセクションでは、JSXブロックがDOMの軽量版であるVDOMにどのように変換されるかを学びます。</li>
+<li><strong>レンダリング</strong>: このセクションでは、VDOMを通常のDOMに変換する方法を示します。</li>
+<li><strong>パッチ処理</strong>: このセクションでは、「key」プロパティがなぜ重要か、そしてVDOMを使ってどのように既存のDOMを効率的にパッチ処理するかを説明します。</li>
+<li><strong>コンポーネント</strong>: 最終セクションでは、Reactコンポーネントの作成、ライフサイクル、レンダリング手順について説明します。</li>
+</ul>
+<p>各セクションの最後には、これまでの進捗を即座に確認できるライブ例が用意されています。それでは始めましょう。</p>
+<h2 id="要素">要素</h2>
+<p>要素とは、実際のDOMの軽量なオブジェクト表現です。ノードタイプ、属性、子要素リストなどの重要な情報を保持しているため、後で簡単にレンダリングできます。要素のツリー状の構成を「仮想DOM（VDOM）」と呼びます。以下に、VDOMの一例を示します。</p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ul&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;props&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;className&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;some-list&quot;</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;children&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+        <span class="hljs-punctuation">{</span>
+            <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;li&quot;</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;props&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+                <span class="hljs-attr">&quot;className&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;some-list__item&quot;</span>
+            <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;children&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+                <span class="hljs-string">&quot;One&quot;</span>
+            <span class="hljs-punctuation">]</span>
+        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-punctuation">{</span>
+            <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;li&quot;</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;props&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+                <span class="hljs-attr">&quot;className&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;some-list__item&quot;</span>
+            <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;children&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+                <span class="hljs-string">&quot;Two&quot;</span>
+            <span class="hljs-punctuation">]</span>
+        <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>通常、Reactの開発者はJSXを使って上記のようなモンスターオブジェクトを記述するのではなく、よりシンプルな構文を使います。JSXは、JavaScriptコードとHTMLタグが洗練されたように見えるものです。</p>
+<pre><code class="language-js"><span class="hljs-comment">/** <span class="hljs-doctag">@jsx</span> createElement */</span>
+<span class="hljs-keyword">const</span> list = <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&quot;some-list&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&quot;some-list__item&quot;</span>&gt;</span>One<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&quot;some-list__item&quot;</span>&gt;</span>Two<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span>;
+</code></pre>
+<p>JSXを実行するには、通常の関数呼び出しに変換する必要があります。そのためのpragmaコメントで、使用する関数を定義します。</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> list = <span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;ul&#x27;</span>, {<span class="hljs-attr">className</span>: <span class="hljs-string">&#x27;some-list&#x27;</span>},
+    <span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;li&#x27;</span>, {<span class="hljs-attr">className</span>: <span class="hljs-string">&#x27;some-list__item&#x27;</span>}, <span class="hljs-string">&#x27;One&#x27;</span>),
+    <span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;li&#x27;</span>, {<span class="hljs-attr">className</span>: <span class="hljs-string">&#x27;some-list__item&#x27;</span>}, <span class="hljs-string">&#x27;Two&#x27;</span>),
+);
+</code></pre>
+<p>最終的に、ランタイム中にこの関数が呼び出され、上述のVDOM構造を返すことが期待されます。私たちの実装は簡潔ですが、プリミティブに見えながらも目的を完璧に果たします。</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">createElement</span> = (<span class="hljs-params">type, props, ...children</span>) =&gt; {
+    <span class="hljs-keyword">if</span> (props === <span class="hljs-literal">null</span>) props = {};
+    <span class="hljs-keyword">return</span> {type, props, children};
+};
+</code></pre>
+<p>最初のライブプレイグラウンドは<a href="https://jsbin.com/gizejat/edit?html,js,output"><strong>こちら</strong></a>で公開されています。上述の関数と、それによって生成されたVDOMツリーが含まれています。</p>
+<h3 id="まとめ">まとめ</h3>
+<p>要は、実際のDOMの軽量なオブジェクト（上記のJSON形式）で示されたが、これを生で触るのは難易度が高いため、</p>
+<p>実際は次のように記載する：</p>
+<pre><code class="language-js"><span class="hljs-comment">/** <span class="hljs-doctag">@jsx</span> createElement */</span>
+<span class="hljs-keyword">const</span> list = <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&quot;some-list&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&quot;some-list__item&quot;</span>&gt;</span>One<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&quot;some-list__item&quot;</span>&gt;</span>Two<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span>;
+</code></pre>
+<p>このようなJSXで記載できるが、内部的な処理としては次のように実装される：</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> list = <span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;ul&#x27;</span>, {<span class="hljs-attr">className</span>: <span class="hljs-string">&#x27;some-list&#x27;</span>},
+    <span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;li&#x27;</span>, {<span class="hljs-attr">className</span>: <span class="hljs-string">&#x27;some-list__item&#x27;</span>}, <span class="hljs-string">&#x27;One&#x27;</span>),
+    <span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;li&#x27;</span>, {<span class="hljs-attr">className</span>: <span class="hljs-string">&#x27;some-list__item&#x27;</span>}, <span class="hljs-string">&#x27;Two&#x27;</span>),
+);
+</code></pre>
+<p>最終的には次のように実装して実態にすることができる：</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">createElement</span> = (<span class="hljs-params">type, props, ...children</span>) =&gt; {
+    <span class="hljs-keyword">if</span> (props === <span class="hljs-literal">null</span>) props = {};
+    <span class="hljs-keyword">return</span> {type, props, children};
+};
+</code></pre>
+<h2 id="レンダリング">レンダリング</h2>
+<p><strong>レンダリング</strong>とは、VDOMを実際の表示可能なDOMに変換する過程です。一般的には、VDOMツリーを下っていきながら、各ノードに対応するDOMエレメントを作成する比較的単純なアルゴリズムです。</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">render</span> = (<span class="hljs-params">vdom, parent=<span class="hljs-literal">null</span></span>) =&gt; {
+    <span class="hljs-keyword">const</span> mount = parent ? (<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> parent.<span class="hljs-title function_">appendChild</span>(el)) : (<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> el);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> vdom == <span class="hljs-string">&#x27;string&#x27;</span> || <span class="hljs-keyword">typeof</span> vdom == <span class="hljs-string">&#x27;number&#x27;</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-title function_">mount</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createTextNode</span>(vdom));
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> vdom == <span class="hljs-string">&#x27;boolean&#x27;</span> || vdom === <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-title function_">mount</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createTextNode</span>(<span class="hljs-string">&#x27;&#x27;</span>));
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> vdom == <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; <span class="hljs-keyword">typeof</span> vdom.<span class="hljs-property">type</span> == <span class="hljs-string">&#x27;function&#x27;</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Component</span>.<span class="hljs-title function_">render</span>(vdom, parent);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> vdom == <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; <span class="hljs-keyword">typeof</span> vdom.<span class="hljs-property">type</span> == <span class="hljs-string">&#x27;string&#x27;</span>) {
+        <span class="hljs-keyword">const</span> dom = <span class="hljs-title function_">mount</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(vdom.<span class="hljs-property">type</span>));
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> child <span class="hljs-keyword">of</span> [<span class="hljs-comment">/* flatten */</span>].<span class="hljs-title function_">concat</span>(...vdom.<span class="hljs-property">children</span>))
+            <span class="hljs-title function_">render</span>(child, dom);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> prop <span class="hljs-keyword">in</span> vdom.<span class="hljs-property">props</span>)
+            <span class="hljs-title function_">setAttribute</span>(dom, prop, vdom.<span class="hljs-property">props</span>[prop]);
+        <span class="hljs-keyword">return</span> dom;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Invalid VDOM: <span class="hljs-subst">${vdom}</span>.`</span>);
+    }
+}
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">setAttribute</span> = (<span class="hljs-params">dom, key, value</span>) =&gt; {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> value == <span class="hljs-string">&#x27;function&#x27;</span> &amp;&amp; key.<span class="hljs-title function_">startsWith</span>(<span class="hljs-string">&#x27;on&#x27;</span>)) {
+        <span class="hljs-keyword">const</span> eventType = key.<span class="hljs-title function_">slice</span>(<span class="hljs-number">2</span>).<span class="hljs-title function_">toLowerCase</span>();
+        dom.<span class="hljs-property">__gooactHandlers</span> = dom.<span class="hljs-property">__gooactHandlers</span> || {};
+        dom.<span class="hljs-title function_">removeEventListener</span>(eventType, dom.<span class="hljs-property">__gooactHandlers</span>[eventType]);
+        dom.<span class="hljs-property">__gooactHandlers</span>[eventType] = value;
+        dom.<span class="hljs-title function_">addEventListener</span>(eventType, dom.<span class="hljs-property">__gooactHandlers</span>[eventType]);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key == <span class="hljs-string">&#x27;checked&#x27;</span> || key == <span class="hljs-string">&#x27;value&#x27;</span> || key == <span class="hljs-string">&#x27;className&#x27;</span>) {
+        dom[key] = value;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key == <span class="hljs-string">&#x27;style&#x27;</span> &amp;&amp; <span class="hljs-keyword">typeof</span> value == <span class="hljs-string">&#x27;object&#x27;</span>) {
+        <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(dom.<span class="hljs-property">style</span>, value);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key == <span class="hljs-string">&#x27;ref&#x27;</span> &amp;&amp; <span class="hljs-keyword">typeof</span> value == <span class="hljs-string">&#x27;function&#x27;</span>) {
+        <span class="hljs-title function_">value</span>(dom);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key == <span class="hljs-string">&#x27;key&#x27;</span>) {
+        dom.<span class="hljs-property">__gooactKey</span> = value;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> value != <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; <span class="hljs-keyword">typeof</span> value != <span class="hljs-string">&#x27;function&#x27;</span>) {
+        dom.<span class="hljs-title function_">setAttribute</span>(key, value);
+    }
+};
+</code></pre>
+<p>上記のコードは見ためが複雑ですが、いくつかの smaller parts に分割することで、より簡単に理解できます。</p>
+<ul>
+<li><strong>カスタムAttributeセッター</strong>: VDOMに渡されるプロパティは、DOMの観点から必ずしも有効ではありません。イベントハンドラ、キー識別子、値などは個別に処理する必要があります。</li>
+<li><strong>プリミティブVDOMレンダリング</strong>: 文字列、数値、ブール値、nullなどのプリミティブは、プレーンなテキストノードに変換されます。</li>
+<li><strong>複雑VDOMレンダリング</strong>: 文字列タグを持つノードは、子要素を再帰的にレンダリングしたDOMエレメントに変換されます。</li>
+<li><strong>コンポーネントVDOMレンダリング</strong>: 関数タグを持つノードは別途処理されます。これについては後ほど実装します。</li>
+</ul>
+<p>2番目のライブプレイグラウンドは<a href="https://jsbin.com/nohapeg/edit?html,js,output"><strong>こちら</strong></a>で公開されています。レンダリングプロセスの小さな例が示されています。</p>
+<h2 id="パッチング">パッチング</h2>
+<p><strong>パッチング</strong>とは、既存のDOMと新しく構築したVDOMツリーを調整する過程です。</p>
+<p>深くネストされた、頻繁に更新されるVDOMがあると考えてみましょう。何かが変更されると、たとえ小さな部分であっても表示される必要があります。単純な実装では、毎回完全に再レンダリングする必要があります:</p>
+<ul>
+<li>既存のDOMノードを削除する</li>
+<li>全て再レンダリングする</li>
+</ul>
+<p>これは効率性の観点から問題があります。DOMの構築と適切なペイントは非常に高価な操作です。そこで、パッチングアルゴリズムを書いて、DOMの変更を最小限に抑えることができます:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">patch</span> = (<span class="hljs-params">dom, vdom, parent=dom.parentNode</span>) =&gt; {
+    <span class="hljs-keyword">const</span> replace = parent ? <span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> (parent.<span class="hljs-title function_">replaceChild</span>(el, dom) &amp;&amp; el) : (<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> el);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> vdom == <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; <span class="hljs-keyword">typeof</span> vdom.<span class="hljs-property">type</span> == <span class="hljs-string">&#x27;function&#x27;</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Component</span>.<span class="hljs-title function_">patch</span>(dom, vdom, parent);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> vdom != <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; dom <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Text</span>) {
+        <span class="hljs-keyword">return</span> dom.<span class="hljs-property">textContent</span> != vdom ? <span class="hljs-title function_">replace</span>(<span class="hljs-title function_">render</span>(vdom, parent)) : dom;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> vdom == <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; dom <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Text</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-title function_">replace</span>(<span class="hljs-title function_">render</span>(vdom, parent));
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> vdom == <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; dom.<span class="hljs-property">nodeName</span> != vdom.<span class="hljs-property">type</span>.<span class="hljs-title function_">toUpperCase</span>()) {
+        <span class="hljs-keyword">return</span> <span class="hljs-title function_">replace</span>(<span class="hljs-title function_">render</span>(vdom, parent));
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> vdom == <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; dom.<span class="hljs-property">nodeName</span> == vdom.<span class="hljs-property">type</span>.<span class="hljs-title function_">toUpperCase</span>()) {
+        <span class="hljs-keyword">const</span> pool = {};
+        <span class="hljs-keyword">const</span> active = <span class="hljs-variable language_">document</span>.<span class="hljs-property">activeElement</span>;
+        [<span class="hljs-comment">/* flatten */</span>].<span class="hljs-title function_">concat</span>(...dom.<span class="hljs-property">childNodes</span>).<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">child, index</span>) =&gt;</span> {
+            <span class="hljs-keyword">const</span> key = child.<span class="hljs-property">__gooactKey</span> || <span class="hljs-string">`__index_<span class="hljs-subst">${index}</span>`</span>;
+            pool[key] = child;
+        });
+        [<span class="hljs-comment">/* flatten */</span>].<span class="hljs-title function_">concat</span>(...vdom.<span class="hljs-property">children</span>).<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">child, index</span>) =&gt;</span> {
+            <span class="hljs-keyword">const</span> key = child.<span class="hljs-property">props</span> &amp;&amp; child.<span class="hljs-property">props</span>.<span class="hljs-property">key</span> || <span class="hljs-string">`__index_<span class="hljs-subst">${index}</span>`</span>;
+            dom.<span class="hljs-title function_">appendChild</span>(pool[key] ? <span class="hljs-title function_">patch</span>(pool[key], child) : <span class="hljs-title function_">render</span>(child, dom));
+            <span class="hljs-keyword">delete</span> pool[key];
+        });
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> key <span class="hljs-keyword">in</span> pool) {
+            <span class="hljs-keyword">const</span> instance = pool[key].<span class="hljs-property">__gooactInstance</span>;
+            <span class="hljs-keyword">if</span> (instance) instance.<span class="hljs-title function_">componentWillUnmount</span>();
+            pool[key].<span class="hljs-title function_">remove</span>();
+        }
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> attr <span class="hljs-keyword">of</span> dom.<span class="hljs-property">attributes</span>) dom.<span class="hljs-title function_">removeAttribute</span>(attr.<span class="hljs-property">name</span>);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> prop <span class="hljs-keyword">in</span> vdom.<span class="hljs-property">props</span>) <span class="hljs-title function_">setAttribute</span>(dom, prop, vdom.<span class="hljs-property">props</span>[prop]);
+        active.<span class="hljs-title function_">focus</span>();
+        <span class="hljs-keyword">return</span> dom;
+    }
+}
+</code></pre>
+<ul>
+<li>新しいVDOMを構築する</li>
+<li>既存のDOMと再帰的に比較する</li>
+<li>追加、削除、変更されたノードを特定する</li>
+<li>それらをパッチする</li>
+</ul>
+<p>ただし、計算量の複雑さという別の問題が発生します。2つのツリーを比較するのは O(n³) の複雑さがあります。例えば、1000要素をパッチする場合、10億の比較が必要になります。これはあまりにも多すぎます。代わりに、2つの大きな仮定に基づいた開発的な O(n) アルゴリズムを実装します:</p>
+<ul>
+<li>異なるタイプの2つの要素は、異なるツリーを生成する</li>
+<li>開発者が「key」プロパティを使って、レンダリングが異なっても安定した子要素を示すことができる</li>
+</ul>
+<p>実際のユースケースでは、この仮定はほとんど常に有効です。次のコードを見ていきましょう:</p>
+<p>すべての組み合わせを調べます:</p>
+<ul>
+<li><strong>プリミティブVDOM + テキストDOM:</strong> VDOMの値とDOM のテキストコンテンツを比較し、違いがあれば完全に再レンダリングする</li>
+<li><strong>プリミティブVDOM + 要素DOM:</strong> 完全再レンダリング</li>
+<li><strong>複雑VDOM + テキストDOM:</strong> 完全再レンダリング</li>
+<li><strong>複雑VDOM + 異なるタイプの要素DOM:</strong> 完全再レンダリング</li>
+<li><strong>複雑VDOM + 同じタイプの要素DOM:</strong> 最も興味深い組み合わせ。子要素の調整が行われる部分です。</li>
+<li><strong>コンポーネントVDOM + 任意のDOM:</strong> 前のセクションと同様に、別途処理され、後で実装します。</li>
+</ul>
+<p>テキストノードと複雑なノードは一般に互換性がなく、完全な再レンダリングが必要です。ただし、これは比較的まれな変更です。興味深いのは子要素の調整です。これは以下のように行われます:</p>
+<ul>
+<li>現在アクティブな要素がメモ化される - 調整によってフォーカスが乱れることがある</li>
+<li>DOMの子要素がそれぞれのキーでテンポラリプールに移動される - デフォルトではプレフィックス付きのインデックスがキーとして使われる</li>
+<li>VDOMの子要素がプールのDOMノードにキーでペアリングされ、再帰的にパッチされる - ペアが見つからない場合は新規レンダリング</li>
+<li>ペアリングされなかったDOMノードはドキュメントから削除される</li>
+<li>最終的な親DOMに新しい属性が適用される</li>
+<li>以前のアクティブ要素にフォーカスが戻される</li>
+</ul>
+<p>3番目のライブプレイグラウンドは<a href="https://jsbin.com/poyayij/edit?html,js,output"><strong>こちら</strong></a>で公開されています。リストの調整の小さな例が含まれています。</p>
+<h2 id="コンポーネント">コンポーネント</h2>
+<p><strong>コンポーネント</strong>は概念的にはJavaScriptの関数に似ています - 「props」と呼ばれる任意の入力を受け取り、画面に表示される要素のセットを返します。stateless関数で定義することもできますし、独自の内部状態やメソッド、ライフサイクルフックを持つ派生クラスで定義することもできます。理論は簡単にいきましょう - コードが語ります:</p>
+<p>静的メソッドは内部的に呼び出されることを想定しています:</p>
+<pre><code class="language-js"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Component</span> {
+    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">props</span>) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span> = props || {};
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span> = <span class="hljs-literal">null</span>;
+    }
+
+    <span class="hljs-keyword">static</span> <span class="hljs-title function_">render</span>(<span class="hljs-params">vdom, parent=<span class="hljs-literal">null</span></span>) {
+        <span class="hljs-keyword">const</span> props = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, vdom.<span class="hljs-property">props</span>, {<span class="hljs-attr">children</span>: vdom.<span class="hljs-property">children</span>});
+        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Component</span>.<span class="hljs-title function_">isPrototypeOf</span>(vdom.<span class="hljs-property">type</span>)) {
+            <span class="hljs-keyword">const</span> instance = <span class="hljs-keyword">new</span> (vdom.<span class="hljs-property">type</span>)(props);
+            instance.<span class="hljs-title function_">componentWillMount</span>();
+            instance.<span class="hljs-property">base</span> = <span class="hljs-title function_">render</span>(instance.<span class="hljs-title function_">render</span>(), parent);
+            instance.<span class="hljs-property">base</span>.<span class="hljs-property">__gooactInstance</span> = instance;
+            instance.<span class="hljs-property">base</span>.<span class="hljs-property">__gooactKey</span> = vdom.<span class="hljs-property">props</span>.<span class="hljs-property">key</span>;
+            instance.<span class="hljs-title function_">componentDidMount</span>();
+            <span class="hljs-keyword">return</span> instance.<span class="hljs-property">base</span>;
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">render</span>(vdom.<span class="hljs-title function_">type</span>(props), parent);
+        }
+    }
+
+    <span class="hljs-keyword">static</span> <span class="hljs-title function_">patch</span>(<span class="hljs-params">dom, vdom, parent=dom.parentNode</span>) {
+        <span class="hljs-keyword">const</span> props = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, vdom.<span class="hljs-property">props</span>, {<span class="hljs-attr">children</span>: vdom.<span class="hljs-property">children</span>});
+        <span class="hljs-keyword">if</span> (dom.<span class="hljs-property">__gooactInstance</span> &amp;&amp; dom.<span class="hljs-property">__gooactInstance</span>.<span class="hljs-property">constructor</span> == vdom.<span class="hljs-property">type</span>) {
+            dom.<span class="hljs-property">__gooactInstance</span>.<span class="hljs-title function_">componentWillReceiveProps</span>(props);
+            dom.<span class="hljs-property">__gooactInstance</span>.<span class="hljs-property">props</span> = props;
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">patch</span>(dom, dom.<span class="hljs-property">__gooactInstance</span>.<span class="hljs-title function_">render</span>(), parent);
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Component</span>.<span class="hljs-title function_">isPrototypeOf</span>(vdom.<span class="hljs-property">type</span>)) {
+            <span class="hljs-keyword">const</span> ndom = <span class="hljs-title class_">Component</span>.<span class="hljs-title function_">render</span>(vdom, parent);
+            <span class="hljs-keyword">return</span> parent ? (parent.<span class="hljs-title function_">replaceChild</span>(ndom, dom) &amp;&amp; ndom) : (ndom);
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Component</span>.<span class="hljs-title function_">isPrototypeOf</span>(vdom.<span class="hljs-property">type</span>)) {
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">patch</span>(dom, vdom.<span class="hljs-title function_">type</span>(props), parent);
+        }
+    }
+
+    <span class="hljs-title function_">setState</span>(<span class="hljs-params">nextState</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">shouldComponentUpdate</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span>, nextState)) {
+            <span class="hljs-keyword">const</span> prevState = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">componentWillUpdate</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span>, nextState);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span> = nextState;
+            <span class="hljs-title function_">patch</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">render</span>());
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">componentDidUpdate</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span>, prevState);
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span> = nextState;
+        }
+    }
+
+    <span class="hljs-title function_">shouldComponentUpdate</span>(<span class="hljs-params">nextProps, nextState</span>) {
+        <span class="hljs-keyword">return</span> nextProps != <span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span> || nextState != <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+    }
+
+    <span class="hljs-title function_">componentWillReceiveProps</span>(<span class="hljs-params">nextProps</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    }
+
+    <span class="hljs-title function_">componentWillUpdate</span>(<span class="hljs-params">nextProps, nextState</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    }
+
+    <span class="hljs-title function_">componentDidUpdate</span>(<span class="hljs-params">prevProps, prevState</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    }
+
+    <span class="hljs-title function_">componentWillMount</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    }
+
+    <span class="hljs-title function_">componentDidMount</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    }
+
+    <span class="hljs-title function_">componentWillUnmount</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    }
+}
+</code></pre>
+<ul>
+<li><strong>Render</strong>: 初期レンダリングを行います。statelessコンポーネントは通常の関数として呼び出され、結果がすぐに表示されます。classコンポーネントはインスタンス化され、DOMに接続された後にレンダリングされます。</li>
+<li><strong>パッチング</strong>: 更新を行います。既にDOMノードにコンポーネントインスタンスが接続されている場合は、新しいプロパティを渡して差分をパッチします。そうでない場合は完全な再レンダリングを行います。</li>
+</ul>
+<p>インスタンスメソッドはユーザーが定義する派生クラスで上書きされたり、呼び出されることを想定しています:</p>
+<ul>
+<li><strong>コンストラクタ:</strong> プロパティを処理し、初期状態を定義して自身に格納します。</li>
+<li><strong>状態修正:</strong> 新しい状態を処理し、必要なライフサイクルフックを発火し、パッチサイクルを開始します。</li>
+<li><strong>ライフサイクルフック:</strong> コンポーネントのライフサイクル中に呼び出される一連のメソッド - マウント時、更新時、削除直前など。</li>
+</ul>
+<p>レンダリングメソッドは子クラスで定義されることを想定しています。最後のライブプレイグラウンドは<a href="https://jsbin.com/moziles/edit?js%2Coutput="><strong>こちら</strong></a>で公開されています。これまで作成したすべてのコードと、シンプルなToDoアプリの例が含まれています。</p>
+<h2 id="おわりに">おわりに</h2>
+<p>これでみなさん、完全に機能するReactのクローンを作ることができました。私はこれを「Gooact」と呼びたいと思います - 私の親しい友人への小さな敬意を表したいと思います。結果を詳しく見ていきましょう:</p>
+<ul>
+<li>Gooactは、VDOMを参照してコンプレックスなDOMツリーを効率的に構築し、パッチ処理できます。</li>
+<li>Gooactは関数コンポーネントとclassコンポーネントの両方をサポートしており、適切な内部状態の管理と完全なライフサイクルフックセットが備わっています。</li>
+<li>Gooactは、Babelによって生成されたトランスパイルコードを使用します。</li>
+<li>Gooactは非圧縮のJavaScript160行で収まっています。</li>
+</ul>
+<p>この記事の主な目的は、React内部構造のコアプリンシプルを深く掘り下げることなく示すことでした。そのため、いくつかの機能が Gooact には含まれていません:</p>
+<ul>
+<li>Gooactは、最新バージョンで導入されたフラグメント、ポータル、コンテキスト、参照などをサポートしていません。</li>
+<li>GooactはコンプレックスなReact Fiberを実装していません - 将来的にこれについて書くかもしれません。</li>
+<li>Gooactは重複キーを追跡しないため、時々バグが発生する可能性があります。</li>
+<li>Gooactは一部のメソッドの追加のコールバックをサポートしていません。</li>
+</ul>
+<p>新しい機能と改善の余地がたくさんあるのがわかります。<a href="https://github.com/sweetpalma/gooact"><strong>リポジトリはこちら</strong></a>にありますので、ぜひフォークして実験してみてください。npmでもインストールできます!</p>
+<p>素晴らしいライブラリを作ってくれたReactチームに感謝します。Preactの創造者であるJason Millerにも特別な敬意を表したいと思います - この記事はその極小主義的なアプローチに多くの影響を受けています。</p>
+<p>この記事が気に入っていただけましたら、ぜひ共有やおすすめをお願いします。これからも同様の記事を書いていきたいと思います。ご覧いただき、ありがとうございました!</p>
+<p>次の記事では、ブロックチェーンの内部構造についてさらに知りたい方向けに、「Goothereum: JavaScriptで160行のcryptocurrency」を書きます。</p>
+
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>
